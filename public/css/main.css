@@ -1,0 +1,151 @@
+body {
+	background-color: #FFFFFF;
+	color: #222222;
+
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+
+nav {
+	background-color: #FFFFFF !important;
+	color: #333333 !important;
+	box-shadow: 5px 0px 30px rgba(0, 0, 0, 0.08);
+}
+	#navbar-button {
+		font-size: 22px;
+		color: #000000;
+		opacity: 0.8;
+		transition: all 0.5s ease;
+	}
+		#navbar-button:hover {
+			opacity: 1;
+			cursor: pointer;
+			color: #666666;
+		}
+
+	#mobile-nav {
+		background-color: #FFFFFF;
+		font-weight: 600;
+		transition: background-color 0.2s ease;
+	}
+		#mobile-nav > li > a {
+			font-weight: 600;
+			text-transform: uppercase;
+			color: #000000;
+		}
+	
+	#desktop-nav > li > a {
+		color: #000000;
+		font-weight: 600;
+		font-size: 14px;
+		transition: all 0.2s ease-in-out;
+		text-transform: uppercase;
+	}
+		#desktop-nav > li > a:hover {color: #999999;}
+
+.logo {
+	width: 130px;
+	height: 100%;
+	vertical-align: middle;
+	opacity: 1;
+	transition: all ease-in-out 0.2s;
+}
+	.logo:hover {
+		opacity: 0.8;
+	}
+	
+main {
+	flex: 1 0 auto;
+	overflow: hidden;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.post-title {
+	font-size: 22px;
+	margin-bottom: 10px;
+	font-weight: bold;
+	color: #000000;
+	text-transform: uppercase;
+	text-transform: all 0.2s ease-in-out;
+}
+
+.post-card {
+	border-radius: 8px;
+	padding: 5px 50px 5px 50px;
+	background-color: #FEFEFE;
+	box-shadow: 10px 15px 40px rgba(0, 0, 0, 0.04), 1px 3px 8px rgba(0, 0, 0, 0.05);
+	margin-bottom: 20px;
+
+	height: 300px;
+	position: relative;
+}
+	.post-card:hover {
+		cursor: pointer;
+	}
+
+/* Breadcrumbs. */
+.breadcrumbs {
+	border-radius: 5px;
+	padding: 10px 20px;
+	color: #444444;
+	background-color: #FFFFFF;
+	display: inline-block;
+	box-shadow: 10px 15px 40px rgba(0, 0, 0, 0.04), 1px 3px 8px rgba(0, 0, 0, 0.05);
+}
+	.breadcrumbs > a {
+		color: #222222;
+		font-weight: bold;
+		transition: all ease-in-out 0.2s;
+	}
+	.breadcrumbs > a:hover {color: #666666;}
+
+/* Collapsible header box. */
+#collapseBox {
+	position: relative;
+	top: 25px;
+	float: left;
+	width: 70%;
+	background-color: white;
+}
+
+/* Alerts. */
+.alert {
+	padding:10px 0px 10px 20px;
+	color: white;
+	margin-bottom: 15px;
+	position: absolute;
+	top: 5%;
+	width: 65%;
+	border-radius: 4px;
+	animation-duration: 0.5s;
+}
+	.alert-error {background-color: #f44336;}
+	.alert-success {background-color: #4BB543;}
+
+.alertClose {
+	position: absolute;
+	right: 10px;
+	bottom: 8px;
+}
+	.alertClose:hover {cursor: pointer;}
+
+
+.view-button {
+	position: absolute;
+	bottom: 50px;
+	left: 50px;
+}
+
+/* Colour helpers. */
+.bg-blue {background-color: #0b2240;}
+.btn:hover {background-color: #cc0300;}
+
+.no-style {color: #000000;}
+
+.fg-blue {color: #4CAF50;}
+.fg-grey {color: #333333;}
+.fg-lightGrey {color: #666666;}

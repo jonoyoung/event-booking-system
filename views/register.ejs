@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <title>Theta Events - Register</title>
+
+    <% include ./partials/head %>
+
+    <% include ./partials/navbar %>
+
+    <body>
+        <main>
+            <div class="container">
+                <br />
+                <% if (sessionFlash && sessionFlash.message) { %>
+                    <div class="alert alert-<%= sessionFlash.type %> animated fadeInLeft"><%= sessionFlash.message %><i class="alertClose material-icons">close</i></div>
+                <% } %>
+    
+                <div class="row">
+                    <h2 class="bold fg-grey center-align">Register</h2>
+    
+                    <form class="col s10 center-align offset-s1 l8 offset-l2" action="/register" method="POST">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="username" type="text" name="username" required="" class="validate" />
+                                <label for="username">Username</label>
+                            </div>
+
+                            <div class="input-field col s12">
+                                <input id="firstName" type="text" name="firstName" required="" class="validate" />
+                                <label for="firstName">First Name</label>
+                            </div>
+
+                            <div class="input-field col s12">
+                                <input id="lastName" type="text" name="lastName" required="" class="validate" />
+                                <label for="lastName">Last Name</label>
+                            </div>
+                        
+                            <div class="input-field col s12">
+                                <input id="password" type="password" name="password" required="" class="validate" />
+                                <label for="password">Password</label>
+                            </div>
+
+                            <div class="input-field col s12">
+                                <input id="passwordConfirm" type="password" name="passwordConfirm" required="" class="validate" />
+                                <label for="passwordConfirm">Confirm Password</label>
+                            </div>
+    
+                            <button class="bg-blue btn waves-effect waves-light" style="width: 95%" type="submit">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <% include ./partials/footer %>
+
+        <script>
+            // Close button functionality.
+            var closeButton = document.getElementsByClassName("alertClose");
+                
+            for (var i = 0; i < closeButton.length; i++) {
+                alertCloseClick(closeButton[i], '.alert');
+            }
+    
+            // Remove alert after 2.5 seconds.
+            setTimeout(function() {
+                $('.alert').addClass("animated fadeOutLeft");
+            }, 2500);
+        </script>
+    </body>
+</html>

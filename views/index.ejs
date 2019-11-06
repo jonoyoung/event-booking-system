@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <title>Theta Events - Home</title>
+    <% var events %>
+
+    <% include ./partials/head %>
+
+    <% include ./partials/navbar %>
+
+    <body>
+        <main>
+            <div class="container">
+                <div class="row">
+                    <br />
+                    <h2 class="bold fg-grey">Events</h2>
+                    <% if (events) { %>
+                        <% if (events.length > 0) { %>
+							<% events.forEach(function(event) { %>
+                                <div class="col s12 m12 l6">
+                                    <div class="post-card" onclick="location.href='/event/<%= event.id %>';">
+                                        <h2 class="post-title"><%- event.title %></h2>
+
+                                        <b class="fg-lightGrey"><%- event.location %></b><br />
+
+                                        <span class="fg-lightGrey"><%- event.date %></span><br /><br />
+
+                                        <span><%- event.shortDesc %></span>
+
+                                        <a class="view-button bg-blue btn waves-effect waves-light" href="/event/<%= event.id %>">View Event</a>
+									</div>
+								</div>
+                            <% }) %>
+                        <% } else { %>
+                            <% events.forEach(function(event) { %>
+                                <div class="col s12 m12 l12">
+									<div class="post-card" onclick="location.href='/event/<%= event.id %>';">
+                                        <h2 class="post-title"><%- event.title %></h2>
+
+                                        <b class="fg-lightGrey"><%- event.location %></b><br />
+
+                                        <span class="fg-lightGrey"><%- event.date %></span><br /><br />
+
+                                        <span><%- event.shortDesc %></span>
+
+                                        <a class="view-button bg-blue btn waves-effect waves-light" href="/event/<%= event.id %>">View Event</a>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } %>
+                    <% } else { %>
+                        <p>There doesn't appear to be any events created.. <a href="/login">Login</a> to create a new event.</p>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+
+        <% include ./partials/footer %>
+    </body>
+</html>

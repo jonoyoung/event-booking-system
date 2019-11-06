@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <title>Theta Events - Login</title>
+
+    <% include ./partials/head %>
+
+    <% include ./partials/navbar %>
+
+    <body>
+        <main>
+            <div class="container">
+                <br />
+                <% if (sessionFlash && sessionFlash.message) { %>
+                    <div class="alert alert-<%= sessionFlash.type %> animated fadeInLeft"><%= sessionFlash.message %><i class="alertClose material-icons">close</i></div>
+                <% } %>
+
+                <div class="row">
+                    <h2 class="bold fg-grey center-align">Login</h2>
+
+                    <form class="col s10 center-align offset-s1 l8 offset-l2" action="/login" method="POST">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="username" type="text" name="username" required="" class="validate" />
+                                <label for="username">Username</label>
+                            </div>
+                    
+                            <div class="input-field col s12">
+                                <input id="password" type="password" name="password" required="" class="validate" />
+                                <label for="password">Password</label>
+                            </div>
+
+                            <button class="bg-blue btn waves-effect waves-light" style="width: 97%" type="submit">Login</button>
+                        </div>
+
+                        <br />
+
+                        <p>Don't have an account? <a class="bold" href="/register">Sign up.</a></p>
+                    </form>
+                </div>
+
+                <br /><br />
+            </div>
+        </main>
+
+        <% include ./partials/footer %>
+
+        <script>
+            // Close button functionality.
+            var closeButton = document.getElementsByClassName("alertClose");
+            
+            for (var i = 0; i < closeButton.length; i++) {
+                alertCloseClick(closeButton[i], '.alert');
+            }
+
+            // Remove alert after 2.5 seconds.
+            setTimeout(function() {
+                $('.alert').addClass("animated fadeOutLeft");
+            }, 2500);
+        </script>
+    </body>
+</html>

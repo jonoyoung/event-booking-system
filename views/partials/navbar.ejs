@@ -1,0 +1,34 @@
+<header>
+    <nav>
+	    <div class="nav-wrapper">
+            <div class="container">
+                <div class="col s12">
+                    <a href="/"><img class="logo responsive-img" src="/img/logo.png" alt="UOW Logo" /></a>
+                            
+                    <a data-target="mobile-nav" class="sidenav-trigger right"><i id="navbar-button" class="material-icons">menu</i></a>
+                    <ul id="desktop-nav" class="hide-on-med-and-down right">
+                        <li><a href="/">Home</a></li>
+                        <% if (loggedIn) { %>
+                            <li><a href="/profile">Profile</a></li>
+                            <li><a href="/create-event">Create Event</a></li>
+                        <% } else { %>
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Register</a></li>
+                        <% } %>
+                    </ul>
+
+                    <ul id="mobile-nav" class="sidenav">
+                        <li><a class="waves-effect" href="/">Home</a></li>
+                        <% if (loggedIn) { %>
+                            <li><a class="waves-effect" href="/profile">Profile</a></li>
+                            <li><a class="waves-effect" href="/create-event">Create Event</a></li>
+                        <% } else { %>
+                            <li><a class="waves-effect" href="/login">Login</a></li>
+                            <li><a class="waves-effect" href="/register">Register</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+	</nav>
+</header>

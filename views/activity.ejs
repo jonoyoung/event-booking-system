@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <title>Theta Events - Activity</title>
+    <% var loggedIn; %>
+    <% include ./partials/head %>
+
+    <% include ./partials/navbar %>
+
+    <body>
+        <main>
+            <div class="container">
+                <div class="row">
+                    <h2 class="bold fg-grey">Activity</h2>
+                    <br />
+
+                    <ul class="collection with-header" style="border-radius: 5px;">
+                        <li class="collection-header"><%= username %></li>
+                        <li class="collection-item">
+                            <% activity.forEach(function(act) { %>
+                                <p><%= act.date.toUTCString(); %> <b><%- act.title %></b> <%- act.description %></p>
+                            <% }) %>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <% include ./partials/footer %>
+    </body>
+</html>

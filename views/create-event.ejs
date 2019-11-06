@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <title>Theta Events - Create Event</title>
+
+    <% include ./partials/head %>
+
+    <% include ./partials/navbar %>
+
+    <body>
+        <main>
+            <div class="container">
+                <br />      
+                <div class="row">
+                    <h2 class="bold fg-grey center-align">Create Event</h2>
+    
+                    <form class="col s10 center-align offset-s1 l8 offset-l2" action="/create-event" method="POST">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input title="Enter the title of the event." id="title" type="text" name="title" required="" class="validate" />
+                                <label for="title">Title</label>
+                            </div>
+                            
+                            <div class="input-field col s12">
+                                <input title="Enter a short description to describe the event." id="shortDesc" type="text" name="shortDesc" required="" maxlength="70" data-length="70" class="validate" />
+                                <label for="shortDesc">Short Description</label>
+                            </div>
+
+                            <div class="input-field col s6">
+                                <input title="Enter a value for the limit of people that can attend this event." id="capacity" name="capacity" type="number" min="1" step="1" required="" class="validate" />
+                                <label for="capacity">Capacity</label>
+                            </div>
+
+                            <div class="input-field col s6">
+                                <input title="Enter a decimal value here." id="price" type="text" name="price" required="" class="validate" />
+                                <label for="price">Price</label>
+                            </div>
+                            
+                            <div class="input-field col s12">
+                                <input title="Enter the location of the event." id="location" type="text" name="location" required="" class="validate" />
+                                <label for="location">Location</label>
+                            </div>
+
+							<div class="input-field col s6">
+                                <input id="date" type="date" name="date" required="" class="validate">
+                                <label for="date">Date</label>
+							</div>
+
+							<div class="input-field col s6">
+								<input title="Enter a time this is in 24 hour time." id="time" type="time" name="time" required="" class="validate" />
+								<label for="time">Time</label>
+                            </div>
+                            
+                            <div class="input-field col s12">
+                                <textarea title="Enter the text you would like displayed about the event." id="description" type="text" name="description" class="materialize-textarea validate"></textarea>
+                                <label for="description">Description</label>
+                            </div>
+
+                            <div class="input-field col s12">
+                                <input title="Enter a promo code if you want any valid." id="promoCode" type="text" name="promoCode" />
+                                <label for="promoCode">Promo Code</label>
+                            </div>
+    
+                            <button class="bg-blue btn waves-effect waves-light" style="width: 97%" type="submit">Create</button>
+                        </div>
+                    </form>
+                </div>
+    
+                <br /><br />
+            </div>
+        </main>
+
+        <% include ./partials/footer %>
+
+        <script type="text/javascript">
+            document.getElementById("price").value = "0.00";
+
+            // Make sure the date selected is after the current date.
+            var date = document.getElementById('date');
+            date.addEventListener('change', function() {
+                var d = new Date();
+                var nd = new Date(this.value);
+
+                if (new Date(this.value).getTime() <= d.getTime()) {                    
+                    date.value = d.getFullYear() + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + ("0" + (d.getDay())).slice(-2);
+                }
+            });        
+        </script>
+    </body>
+</html>

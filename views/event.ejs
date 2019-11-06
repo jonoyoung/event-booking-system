@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <title>Theta Events - <%= event.title %></title>
+    <% var loggedIn; %>
+
+    <% include ./partials/head %>
+
+    <% include ./partials/navbar %>
+
+    <body>
+        <main>
+            <div class="container">
+                <div class="row">
+                    <br />
+
+                    <% if (sessionFlash && sessionFlash.message) { %>
+                        <div class="alert alert-<%= sessionFlash.type %> animated fadeInLeft"><%= sessionFlash.message %><i class="alertClose material-icons">close</i></div>
+                    <% } %>
+
+                    <div class="breadcrumbs">
+                        <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
+                        <a href="/event/<%= event.id %>"><%= event.title %></a>
+                    </div>
+
+                    <br />
+                                        
+                    <h2 style="display: inline-block;" class="bold fg-grey"><%= event.title %></h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <% if (user.username == userLoggedIn) { %>
+                            <a style="margin-bottom: 25px;" class="bg-blue btn waves-effect waves-light" href="/edit-event/<%= event.id %>">Edit</a>
+                            <a style="margin-bottom: 25px;" class="bg-blue btn waves-effect waves-light" href="/cancel-event/<%= event.id %>">Cancel Event</a>
+                        <% } %>
+                    <br />
+
+                    <ul>
+                        <li>
+                            <i class="material-icons" style="vertical-align: bottom;">date_range</i>&nbsp;&nbsp;<%= event.date %><span style="padding-left: 20px;"></span>
+                            <i class="material-icons" style="vertical-align: bottom;">access_time</i>&nbsp;&nbsp;<%= event.time %><span style="padding-left: 20px;"></span>
+                            <i class="material-icons" style="vertical-align: bottom;">add_location</i>&nbsp;&nbsp;<%= event.location %><span style="padding-left: 20px;"></span>
+                            <i class="material-icons" style="vertical-align: bottom;">group</i>&nbsp;&nbsp;<%= event.capacity %><span style="padding-left: 20px;"></span>
+                            <i class="material-icons" style="vertical-align: bottom;">attach_money</i>&nbsp;&nbsp;<%= event.price %><span style="padding-left: 20px;"></span>
+                        </li>
+
+                        <br />
+
+                            
+                        <li><i class="material-icons" style="vertical-align: bottom;">person</i>&nbsp;&nbsp;<%= user.firstName %>&nbsp;<%= user.lastName %></li>
+                            
+                    </ul>
+
+                    <br />
+                    <%- eventDesc %>
+
+                    <br/><br/>
+
+                        
+                    <% if (loggedIn && user.username != userLoggedIn && !attending) { %>
+                        <a href="/attend/<%= event.id %>" class="btn bg-blue waves-effect waves-light">Attend Event</a>
+                    <% } %>
+                </div>
+
+                <div id="collapseBox" class="row">
+                    <ul class="collapsible">
+                        <li>
+                            <div class="collapsible-header">Attendees</div>
+                            <div class="collapsible-body">
+                                <ul class="collection">
+                                    <% attendees.forEach(function(attendee) { %>
+                                        <li class="collection-item"><%= attendee.firstName %> <%= attendee.lastName %>
+
+                                        <% if (userLoggedIn == user.username) { %>
+                                            &nbsp;&nbsp;<a href="/cancel-attend/<%= attendee.userId %>/<%= event.id %>" class="btn-flat waves-effect waves-light">Cancel Attendance</a>
+                                        <% } %>
+                                        
+                                        </li> 
+                                    <% }) %>
+                                    
+                                    <br />
+
+                                    <% if (attending) { %>
+                                        <a href="/cancel-attend/<%= userLoggedInId %>/<%= event.id %>" class="btn-flat waves-effect waves-light">Cancel Attendance</a>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header">Promo Code</div>
+                            <div class="collapsible-body">
+                                <form action="/enter-promo/<%= event.id %>" method="POST">
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <input id="promoCode" type="text" name="promoCode" required="" class="validate" />
+                                            <label for="promoCode">Promo Code</label>
+                                        </div>
+
+                                        <div class="col s6">
+                                            <button style="margin-top: 20px;" class="bg-blue btn waves-effect waves-light" style="width: 97%" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <% if (loggedIn && user.username != userLoggedIn && !attending) { %>
+                            <li>
+                                <div class="collapse-header" style="padding: 20px;"><a class="btn bg-blue waves-effect waves-light" href="/payment/<%= event.id %>">Pay Now</a></div>
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <% include ./partials/footer %>
+
+        <script>
+            // Close button functionality.
+            var closeButton = document.getElementsByClassName("alertClose");
+            
+            for (var i = 0; i < closeButton.length; i++) {
+                alertCloseClick(closeButton[i], '.alert');
+            }
+
+            // Remove alert after 2.5 seconds.
+            setTimeout(function() {
+                $('.alert').addClass("animated fadeOutLeft");
+            }, 2500);
+        </script>
+    </body>
+</html>

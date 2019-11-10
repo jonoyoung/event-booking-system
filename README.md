@@ -2,9 +2,9 @@
  Event booking system from an assignment.
  
 ## Requirements
-NodeJs
-MySQL server
-npm
+* NodeJs
+* MySQL server
+* npm
  
 ## Description
 This project was an assignment, where we were tasked with creating an event booking system. It was up to us to decide what frameworks and languages we would use. I decided that ‘Nodejs’ would be the most appropriate as the program needed to be fast and with the time frame of the assignment it needed to be easy to setup and create.

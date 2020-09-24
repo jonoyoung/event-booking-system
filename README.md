@@ -1,17 +1,17 @@
-# Event-Booking-System
- Event booking system from an assignment.
+# event-booking-system
+ An event booking system from an assignment for Univeristy.
  
+## Description
+This project was an assignment, where we were tasked with creating an event booking system. It was up to us to decide what frameworks and languages we would use. I decided that `Nodejs` would be the most appropriate as the program needed to be fast and with the time frame of the assignment it needed to be easy to setup and create.
+
+The program was created using `NodeJs` with various frameworks. The backend also had an `MySQL server`, mainly because a relational database was more relevant to the specific use case. Otherwise `MongoDB` would have been the better database choice since it is used so frequently with `NodeJs`.
+
+The design was very similar to my personal website (if you couldn’t tell). We wanted something clean and unobtrusive so that it would be easier to mark the assignment.
+
 ## Requirements
 * NodeJs
 * MySQL server
 * npm
- 
-## Description
-This project was an assignment, where we were tasked with creating an event booking system. It was up to us to decide what frameworks and languages we would use. We decided that ‘Nodejs’ would be the most appropriate as the program needed to be fast and with the time frame of the assignment it needed to be easy to setup and create.
-
-The program was created using ‘Nodejs’ with various frameworks. The backend also had an SQL server, mainly because a relational database was more relevant to the specific use case.
-
-The design was very similar to this website (if you couldn’t tell). We wanted something clean and unobtrusive so that it would be easier to mark the assignment.
 
 ## Installation
 If you would like to install and run this, then the following steps will help.

@@ -1,21 +1,19 @@
-// Initial variables for use.
 var express = require('express');
-var path = require('path');
-var ejs = require('ejs');
 var app = express();
 var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var mysql = require('mysql');
 var session = require('express-session');
 var mysqlStore = require('express-mysql-session')(session);
+require('dotenv').config();
 
 // MySQL related code.
 var db = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: '',
-  database: 'theta',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 // Connect to the database.
@@ -40,7 +38,7 @@ global.db = db;
 // Setup the session values for storing user logins.
 app.use(
   session({
-    secret: 'protoTheta',
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
     cookie: {
@@ -72,12 +70,12 @@ var routes = require('./routes/router');
 app.use('/', routes);
 
 // If the URL entered could not be found, return this message.
-app.use(function (req, res, next) {
+app.use(function (req, res) {
   res.status(404).render('404.ejs', { loggedIn: req.session.loggedin });
 });
 
 // Response status for error code 500.
-app.use(function (err, req, res, next) {
+app.use(function (err, res) {
   res.status(err.status || 500);
   res.send(err.message);
 });

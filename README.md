@@ -16,21 +16,21 @@ The design was very similar to my personal website (if you couldn’t tell). We 
 ## Installation
 If you would like to install and run this, then the following steps will help.
 
-* Creating the MySQL table will require a MySQL server. Run the 'dbcreate.sql' file located in the 'sql' folder.
+1. Use the `.env.template` file to create a `.env` file in your root directory with your database details.
+  ```
+  DB_HOST= # The hostname of your MySQL server. Typically: localhost.
+  DB_PORT= # The port of your MySQL server. Typically: 3306,
+  DB_USER= # The username of your MySQL server.
+  DB_PASS= # The password of your MySQL server.
+  DB_NAME= # The database name for your MySQL server. Call it anything you like i.e. event-booking-system
+  SESSION_SECRET= # The secret phrase for sessions used in the app. Can be anything you like make sure it's strong.
+  ```
 
-* In the current directory (where the 'app.js' file is located) run the following command: ``` npm install ```
+2. Creating the MySQL table will require a MySQL server. Run the 'dbcreate.sql' file located in the 'sql' folder.
+
+3. In the current directory (where the 'app.js' file is located) run the following command: ``` npm install ```
 (This will install all of the libraries that the app requires to run.)
 
-* Configure the MySQL settings by opening the 'app.js' file and editing the following:
-```
-const db = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'test',
-    database: 'theta'
-});
-```
-* Once the previous step has been completed you can now run the app: ``` node app ```
+4. Once the previous step has been completed you can now run the app: ``` node app ```
 This starts the server and you can find that server on port 3000. 
 You can go to your browser at 'localhost:3000' and the server should be working.

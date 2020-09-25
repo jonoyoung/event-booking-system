@@ -4,12 +4,14 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['airbnb-base', 'prettier', 'eslint-config-prettier'],
+  extends: ["airbnb-base", "prettier", "eslint-config-prettier"],
   parserOptions: {
     ecmaVersion: 12,
   },
-  plugins: ['prettier'],
+  globals: {
+    db: true,
+  },
   rules: {
-    'no-console': [0],
+    "no-console": [0],
   },
 };

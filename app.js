@@ -1,11 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const flash = require("express-flash");
-const mysql = require("mysql");
-const session = require("express-session");
-const MysqlStore = require("express-mysql-session")(session);
-const routes = require("./routes/router");
-require("dotenv").config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const flash = require('express-flash');
+const mysql = require('mysql');
+const session = require('express-session');
+const MysqlStore = require('express-mysql-session')(session);
+const routes = require('./routes/router');
+require('dotenv').config();
 
 const app = express();
 
@@ -24,17 +24,12 @@ db.connect((err) => {
     console.log(`[Server] [DB]: Error connecting to MySQL: ${err}`);
     process.exit(1);
   } else {
-    console.log("[Server] [DB]: Successfully connected to MySQL.");
+    console.log('[Server] [DB]: Successfully connected to MySQL.');
   }
 });
 
 // Setup the session store and make the database variables global.
-const sessionStore = new MysqlStore(
-  {
-    expiration: 3600000,
-  },
-  db
-);
+const sessionStore = new MysqlStore({ expiration: 3600000 }, db);
 global.db = db;
 
 // Setup the session values for storing user logins.
@@ -47,14 +42,14 @@ app.use(
       expires: new Date(Date.now() + 3600000),
       maxAge: 3600000,
     },
-  })
+  }),
 );
 
 // Set the express ports, views and public directory names.
 app.use(express.static(`${__dirname}/public`));
 app.use(flash());
-app.set("port", process.env.PORT || 3000);
-app.set("view engine", "ejs");
+app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'ejs');
 
 // Setup the error messaging.
 app.use((req, res, next) => {
@@ -68,11 +63,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Configure the routes to be sent to the router.js file.
-app.use("/", routes);
+app.use('/', routes);
 
 // If the URL entered could not be found, return this message.
 app.use((req, res) => {
-  res.status(404).render("404.ejs", { loggedIn: req.session.loggedin });
+  res.status(404).render('404.ejs', { loggedIn: req.session.loggedin });
 });
 
 // Response status for error code 500.
@@ -82,8 +77,8 @@ app.use((err, res) => {
 });
 
 // Creates the server and listens on the specified port.
-app.listen(app.get("port"), () => {
+app.listen(app.get('port'), () => {
   console.log(
-    `[Server]: Server has started and is listening on port ${app.get("port")}.`
+    `[Server]: Server has started and is listening on port ${app.get('port')}.`,
   );
 });

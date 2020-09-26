@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const flash = require('express-flash');
 const mysql = require('mysql');
 const session = require('express-session');
+const MemoryStore = require('memorystore')(session);
 const MysqlStore = require('express-mysql-session')(session);
 const routes = require('./routes/router');
 require('dotenv').config();
@@ -42,6 +43,7 @@ app.use(
       expires: new Date(Date.now() + 3600000),
       maxAge: 3600000,
     },
+    store: new MemoryStore({ checkPeriod: 86400000 }),
   }),
 );
 

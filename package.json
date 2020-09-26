@@ -17,6 +17,7 @@
     "express-flash": "0.0.2",
     "express-mysql-session": "^2.1.0",
     "express-session": "^1.15.6",
+    "memorystore": "^1.6.2",
     "mongoose": "^5.7.5",
     "mysql": "^2.16.0",
     "nl2br": "0.0.3",

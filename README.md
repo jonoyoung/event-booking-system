@@ -32,6 +32,16 @@ If you would like to install and run this, then the following steps will help.
 3. In the current directory (where the `app.js` file is located) run the following command: `npm install`
 (This will install all of the libraries that the app requires to run.)
 
-4. Once the previous step has been completed you can now run the app: `node app`
+4. Once the previous step has been completed you can now run the app: `npm start`
 This starts the server and you can find that server on port 3000. 
 You can go to your browser at 'localhost:3000' and the server should be working.
+
+## Errors
+### MySQL
+If you encounter an error such as `Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client`.
+You may need to set the following on your MySQL database:
+  1. Sign into your MySQL database: `mysql -u root -p`
+  2. Use the MySQL databse: `use mysql;`
+  3. Run the following command: `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourPasswordHere';`
+
+This should solve any further issues related to the auth mode not being supported.

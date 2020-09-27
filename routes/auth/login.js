@@ -25,40 +25,44 @@ loginRouter.post('/login', (req, res) => {
     req.body.username,
   )};`;
 
-  db.query(userQuery, (error, results) => {
-    if (results.length > 0) {
-      // If the password matches the hashed DB password.
-      if (bcrypt.compareSync(req.body.password, results[0].password)) {
-        req.session.loggedin = true;
-        req.session.username = results[0].username;
-        req.session.userId = results[0].id;
-        res.redirect('/profile');
+  db.getConnection((err, connection) => {
+    connection.query(userQuery, (error, results) => {
+      if (results.length > 0) {
+        // If the password matches the hashed DB password.
+        if (bcrypt.compareSync(req.body.password, results[0].password)) {
+          req.session.loggedin = true;
+          req.session.username = results[0].username;
+          req.session.userId = results[0].id;
+          res.redirect('/profile');
 
-        // Add activity.
-        const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
-          req.session.userId,
-        )}, '[Login]', 'You logged in.', NOW());`;
-        db.query(activityQuery, (error, results) => {
-          if (error) {
-            console.log(`[Activity] Insert error: ${error}`);
-          }
-        });
+          // Add activity.
+          const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
+            req.session.userId,
+          )}, '[Login]', 'You logged in.', NOW());`;
+          connection.query(activityQuery, (error, results) => {
+            if (error) {
+              console.log(`[Activity] Insert error: ${error}`);
+            }
+          });
+        } else {
+          // Redirect if password wrong.
+          req.session.sessionFlash = {
+            type: 'error',
+            message: 'Username or password was incorrect.',
+          };
+          res.redirect('/login');
+        }
       } else {
-        // Redirect if password wrong.
+        // If username doesn't exist redirect.
         req.session.sessionFlash = {
           type: 'error',
           message: 'Username or password was incorrect.',
         };
         res.redirect('/login');
       }
-    } else {
-      // If username doesn't exist redirect.
-      req.session.sessionFlash = {
-        type: 'error',
-        message: 'Username or password was incorrect.',
-      };
-      res.redirect('/login');
-    }
+
+      connection.release();
+    });
   });
 });
 

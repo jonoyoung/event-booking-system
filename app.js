@@ -11,22 +11,12 @@ require('dotenv').config();
 const app = express();
 
 // MySQL related code.
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-});
-
-// Connect to the database.
-db.connect((err) => {
-  if (err) {
-    console.log(`[Server] [DB]: Error connecting to MySQL: ${err}`);
-    process.exit(1);
-  } else {
-    console.log('[Server] [DB]: Successfully connected to MySQL.');
-  }
 });
 
 // Setup the session store and make the database variables global.

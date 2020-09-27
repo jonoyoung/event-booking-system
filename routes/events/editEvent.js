@@ -11,20 +11,23 @@ editEventRouter.get('/edit-event/:id', (req, res) => {
     req.params.id,
   )};`;
 
-  db.query(eventQuery, (error, results) => {
-    if (results.length > 0) {
-      // If you are not the owner of the event then you get redirected to the homepage.
-      if (results[0].username != req.session.username) {
-        res.redirect('/');
-        return;
-      }
+  db.getConnection((err, connection) => {
+    connection.query(eventQuery, (error, results) => {
+      connection.release();
+      if (results.length > 0) {
+        // If you are not the owner of the event then you get redirected to the homepage.
+        if (results[0].username != req.session.username) {
+          res.redirect('/');
+          return;
+        }
 
-      // Otherwise render the edit-event page.
-      res.render('edit-event.ejs', {
-        loggedIn: req.session.loggedin,
-        event: results,
-      });
-    }
+        // Otherwise render the edit-event page.
+        res.render('edit-event.ejs', {
+          loggedIn: req.session.loggedin,
+          event: results,
+        });
+      }
+    });
   });
 });
 
@@ -48,19 +51,23 @@ editEventRouter.post('/edit-event/:id', (req, res) => {
     req.body.promoCode,
   )} WHERE id = ${SqlString.escape(req.params.id)};`;
 
-  db.query(updateQuery, (error, results) => {
-    // Add activity.
-    const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
-      req.session.userId,
-    )}, '[Edit Event]', 'You edited the event: ${req.body.title}.', NOW());`;
-    db.query(activityQuery, (error, results) => {
-      if (error) {
-        console.log(`[Activity] Insert error: ${error}`);
-      }
-    });
+  db.getConnection((err, connection) => {
+    connection.query(updateQuery, (error, results) => {
+      // Add activity.
+      const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
+        req.session.userId,
+      )}, '[Edit Event]', 'You edited the event: ${req.body.title}.', NOW());`;
+      connection.query(activityQuery, (error, results) => {
+        if (error) {
+          console.log(`[Activity] Insert error: ${error}`);
+        }
+      });
 
-    // Redirect the user after it has been updated.
-    res.redirect('/');
+      connection.release();
+
+      // Redirect the user after it has been updated.
+      res.redirect('/');
+    });
   });
 });
 

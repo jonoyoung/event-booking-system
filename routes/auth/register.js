@@ -27,46 +27,50 @@ registerRouter.post('/register', (req, res) => {
     )};`;
 
     // If the user exists then don't let them register with that username.
-    db.query(query, (err, result) => {
-      if (err) {
-        console.log(
-          '[Server] [DB]: You cannot have that username, it is already in use.',
-        );
-      }
-
-      // Encrypt the password code.
-      const salt = bcrypt.genSaltSync(SALT_ROUNDS);
-      const hash = bcrypt.hashSync(req.body.password, salt);
-
-      // If the user doesn't exist then INSERT the user into the table based on their supplied attributes.
-      if (result.length != 0) {
-        if (result[0].username == req.body.username) {
-          req.session.sessionFlash = {
-            type: 'error',
-            message: 'That username already exists.',
-          };
-          res.redirect('/register');
+    db.getConnection((err, connection) => {
+      connection.query(query, (err, result) => {
+        if (err) {
+          console.log(
+            '[Server] [DB]: You cannot have that username, it is already in use.',
+          );
         }
-      } else if (result.length == 0) {
-        const insertQuery = `INSERT INTO users (username, firstName, lastName, password) VALUES(${SqlString.escape(
-          req.body.username,
-        )}, ${SqlString.escape(req.body.firstName)}, ${SqlString.escape(
-          req.body.lastName,
-        )}, ${SqlString.escape(hash)});`;
-        db.query(insertQuery, function (err, result) {
-          if (err) {
-            console.log(err);
-          }
 
-          // Send the alert that it was created.
-          req.session.sessionFlash = {
-            type: 'success',
-            message: 'Created account successfully, please log in now.',
-          };
-          req.session.username = req.body.username;
-          res.redirect('/login');
-        });
-      }
+        // Encrypt the password code.
+        const salt = bcrypt.genSaltSync(SALT_ROUNDS);
+        const hash = bcrypt.hashSync(req.body.password, salt);
+
+        // If the user doesn't exist then INSERT the user into the table based on their supplied attributes.
+        if (result.length != 0) {
+          if (result[0].username == req.body.username) {
+            req.session.sessionFlash = {
+              type: 'error',
+              message: 'That username already exists.',
+            };
+            res.redirect('/register');
+          }
+        } else if (result.length == 0) {
+          const insertQuery = `INSERT INTO users (username, firstName, lastName, password) VALUES(${SqlString.escape(
+            req.body.username,
+          )}, ${SqlString.escape(req.body.firstName)}, ${SqlString.escape(
+            req.body.lastName,
+          )}, ${SqlString.escape(hash)});`;
+          connection.query(insertQuery, function (err, result) {
+            if (err) {
+              console.log(err);
+            }
+
+            // Send the alert that it was created.
+            req.session.sessionFlash = {
+              type: 'success',
+              message: 'Created account successfully, please log in now.',
+            };
+            req.session.username = req.body.username;
+            res.redirect('/login');
+          });
+        }
+
+        connection.release();
+      });
     });
   } else {
     // Send the alert that passwords don't match.

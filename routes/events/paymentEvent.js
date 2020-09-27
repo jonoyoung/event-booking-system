@@ -1,6 +1,6 @@
 const paymentRouter = require('express').Router();
 const SqlString = require('sqlstring');
-const checkAuth = require('../../util/checkAuth');
+const checkAuth = require('../../util/auth/checkAuth');
 
 /**
  * Payment GET
@@ -11,17 +11,20 @@ paymentRouter.get('/payment/:id', checkAuth, (req, res) => {
     req.params.id,
   )};`;
 
-  db.query(query, (error, result) => {
-    if (result.length > 0) {
-      res.render('payment.ejs', {
-        loggedIn: req.session.loggedin,
-        expressFlash: req.flash('error'),
-        sessionFlash: res.locals.sessionFlash,
-        event: result[0],
-      });
-    } else {
-      res.redirect('/');
-    }
+  db.getConnection((err, connection) => {
+    connection.query(query, (error, result) => {
+      connection.release();
+      if (result.length > 0) {
+        res.render('payment.ejs', {
+          loggedIn: req.session.loggedin,
+          expressFlash: req.flash('error'),
+          sessionFlash: res.locals.sessionFlash,
+          event: result[0],
+        });
+      } else {
+        res.redirect('/');
+      }
+    });
   });
 });
 

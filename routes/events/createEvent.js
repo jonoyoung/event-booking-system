@@ -1,6 +1,6 @@
 const createEventRouter = require('express').Router();
 const SqlString = require('sqlstring');
-const checkAuth = require('../../util/checkAuth');
+const checkAuth = require('../../util/auth/checkAuth');
 
 /**
  * Create Event GET
@@ -47,22 +47,28 @@ createEventRouter.post('/create-event', (req, res) => {
   }
 
   // Insert the event into the EVENTS table.
-  db.query(insertQuery, (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-
-    // Add activity.
-    const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
-      req.session.userId,
-    )}, '[Create Event]', 'You created the event: ${req.body.title}.', NOW());`;
-    db.query(activityQuery, (error, results) => {
-      if (error) {
-        console.log(`[Activity] Insert error: ${error}`);
+  db.getConnection((err, connection) => {
+    connection.query(insertQuery, (err, result) => {
+      if (err) {
+        console.log(err);
       }
-    });
 
-    res.redirect('/');
+      // Add activity.
+      const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
+        req.session.userId,
+      )}, '[Create Event]', 'You created the event: ${
+        req.body.title
+      }.', NOW());`;
+      connection.query(activityQuery, (error, results) => {
+        if (error) {
+          console.log(`[Activity] Insert error: ${error}`);
+        }
+      });
+
+      connection.release();
+
+      res.redirect('/');
+    });
   });
 });
 

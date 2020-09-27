@@ -1,6 +1,6 @@
 const editProfileRouter = require('express').Router();
 const SqlString = require('sqlstring');
-const checkAuth = require('../../util/checkAuth');
+const checkAuth = require('../../util/auth/checkAuth');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = require('../../constants/defaultConstants');
 
@@ -9,24 +9,28 @@ const SALT_ROUNDS = require('../../constants/defaultConstants');
  * Render the edit profile page for current user.
  */
 editProfileRouter.get('/edit-profile', checkAuth, (req, res) => {
-  db.query(
-    'SELECT username, firstName, lastName FROM users WHERE username = ?',
-    [req.session.username],
-    (error, result) => {
-      if (result.length > 0) {
-        res.render('edit-profile.ejs', {
-          loggedIn: req.session.loggedin,
-          username: result[0].username,
-          firstName: result[0].firstName,
-          lastName: result[0].lastName,
-          expressFlash: req.flash('error'),
-          sessionFlash: res.locals.sessionFlash,
-        });
-      } else {
-        res.redirect('/');
-      }
-    },
-  );
+  db.getConnection((err, connection) => {
+    connection.query(
+      'SELECT username, firstName, lastName FROM users WHERE username = ?',
+      [req.session.username],
+      (error, result) => {
+        connection.release();
+
+        if (result.length > 0) {
+          res.render('edit-profile.ejs', {
+            loggedIn: req.session.loggedin,
+            username: result[0].username,
+            firstName: result[0].firstName,
+            lastName: result[0].lastName,
+            expressFlash: req.flash('error'),
+            sessionFlash: res.locals.sessionFlash,
+          });
+        } else {
+          res.redirect('/');
+        }
+      },
+    );
+  });
 });
 
 /**
@@ -42,61 +46,66 @@ editProfileRouter.post('/edit-profile', (req, res) => {
   const selectQuery = `SELECT username FROM users WHERE username = ${SqlString.escape(
     req.body.username,
   )};`;
-  db.query(selectQuery, (error, result) => {
-    if (result) {
-      if (result.username == req.body.username) {
-        // If username exists redirect.
-        req.session.sessionFlash = {
-          type: 'error',
-          message: 'Username already exists.',
-        };
-        res.redirect('/edit-profile');
-      } else {
-        // Encrypt the password code.
-        const salt = bcrypt.genSaltSync(SALT_ROUNDS);
-        const hash = bcrypt.hashSync(req.body.newPassword, salt);
-        let updateQuery;
 
-        if (req.body.newPassword.length == 0) {
-          updateQuery = `UPDATE users SET username=${SqlString.escape(
-            req.body.username,
-          )}, firstName=${SqlString.escape(
-            req.body.firstName,
-          )}, lastName=${SqlString.escape(
-            req.body.lastName,
-          )} WHERE username=${SqlString.escape(req.session.username)};`;
-        } else if (
-          req.body.newPassword.length > 0 &&
-          req.body.newPassword == req.body.newPasswordConfirm
-        ) {
-          updateQuery = `UPDATE users SET username=${SqlString.escape(
-            req.body.username,
-          )}, firstName=${SqlString.escape(
-            req.body.firstName,
-          )}, lastName=${SqlString.escape(
-            req.body.lastName,
-          )}, password=${SqlString.escape(
-            hash,
-          )} WHERE username=${SqlString.escape(req.session.username)};`;
-        }
+  db.getConnection((err, connection) => {
+    connection.query(selectQuery, (error, result) => {
+      if (result) {
+        if (result.username == req.body.username) {
+          // If username exists redirect.
+          req.session.sessionFlash = {
+            type: 'error',
+            message: 'Username already exists.',
+          };
+          res.redirect('/edit-profile');
+        } else {
+          // Encrypt the password code.
+          const salt = bcrypt.genSaltSync(SALT_ROUNDS);
+          const hash = bcrypt.hashSync(req.body.newPassword, salt);
+          let updateQuery;
 
-        db.query(updateQuery, (error, results) => {
-          // Add activity.
-          const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
-            req.session.userId,
-          )}, '[Update Profile]', 'You updated your profile.', NOW());`;
-          db.query(activityQuery, (error, results) => {
-            if (error) {
-              console.log(`[Activity] Insert error: ${error}`);
-            }
+          if (req.body.newPassword.length == 0) {
+            updateQuery = `UPDATE users SET username=${SqlString.escape(
+              req.body.username,
+            )}, firstName=${SqlString.escape(
+              req.body.firstName,
+            )}, lastName=${SqlString.escape(
+              req.body.lastName,
+            )} WHERE username=${SqlString.escape(req.session.username)};`;
+          } else if (
+            req.body.newPassword.length > 0 &&
+            req.body.newPassword == req.body.newPasswordConfirm
+          ) {
+            updateQuery = `UPDATE users SET username=${SqlString.escape(
+              req.body.username,
+            )}, firstName=${SqlString.escape(
+              req.body.firstName,
+            )}, lastName=${SqlString.escape(
+              req.body.lastName,
+            )}, password=${SqlString.escape(
+              hash,
+            )} WHERE username=${SqlString.escape(req.session.username)};`;
+          }
+
+          connection.query(updateQuery, (error, results) => {
+            // Add activity.
+            const activityQuery = `INSERT INTO activity (userId, title, description, date) VALUES(${SqlString.escape(
+              req.session.userId,
+            )}, '[Update Profile]', 'You updated your profile.', NOW());`;
+            connection.query(activityQuery, (error, results) => {
+              if (error) {
+                console.log(`[Activity] Insert error: ${error}`);
+              }
+            });
+
+            // Redirect the user after it has been updated.
+            req.session.username = req.body.username;
+            res.redirect('/profile');
           });
-
-          // Redirect the user after it has been updated.
-          req.session.username = req.body.username;
-          res.redirect('/profile');
-        });
+        }
       }
-    }
+
+      connection.release();
+    });
   });
 });
 

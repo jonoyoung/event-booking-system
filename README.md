@@ -2,6 +2,7 @@
 An event booking system from an assignment for University.
 
 A demo for this can be found at: [At this Heroku site](https://radiant-mountain-63438.herokuapp.com/)
+The link may take some time to load due to Heroku spinning up the site, it's on a free cluster so performance isn't the best.
 
 ## Description
 This project was an assignment, where we were tasked with creating an event booking system. It was up to us to decide what frameworks and languages we would use. I decided that `Nodejs` would be the most appropriate as the program needed to be fast and with the time frame of the assignment it needed to be easy to setup and create.
